@@ -1,42 +1,147 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Reset and full page */
+html, body, #root, .app-container {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #B0B0B0;
+  color: #121212;
+  scroll-behavior: smooth;
+}
+
+/* Header for stock standings */
+.stock-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #C0C0C0;
+  padding: 15px 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  z-index: 1000;
   text-align: center;
+  font-size: 1.2rem;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Hero section fills full viewport */
+.hero {
+  height: 100vh;          
+  width: 100%;
+  display: flex;
+  justify-content: center; /* horizontal centering */
+  align-items: center;     /* vertical centering */
+  flex-direction: column;     
+  padding: 60px 0 0 0;
+  box-sizing: border-box;  /* ensures padding doesn't break flex centering */
+  text-align: center;
+  background: linear-gradient(180deg, #B0B0B0 0%, #C0C0C0 100%);
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Search bar styling */
+.search-bar {
+  width: 600px;
+  max-width: 90vw;
+  padding: 14px 24px;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  border-radius: 12px;
+  border: none;
+  background: linear-gradient(145deg, #FFFFFF, #E0E0E0);
+  box-shadow: 4px 4px 8px rgba(0,0,0,0.2), -4px -4px 8px rgba(255,255,255,0.7);
+  outline: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  color: #1a1a1a;
+}
+
+.search-bar::placeholder {
+  color: #666666;
+}
+
+/* Optional focus effect */
+.search-bar:focus {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 12px rgba(0,0,0,0.25), -6px -6px 12px rgba(255,255,255,0.8);
+}
+
+/* Scroll indicator */
+.scroll-down {
+  margin-top: 30px;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  cursor: pointer;
+  animation: bounce 2s infinite;
+  color: #555;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(10px); }
+  60% { transform: translateY(5px); }
+}
+
+/* Scrollable main content */
+.content {
+  padding: 40px 10%;
+  background-color: #B0B0B0;
+}
+
+/* FAQs section with gradient */
+.faqs {
+  margin-bottom: 40px;
+  padding: 25px 20px;
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #B0B0B0 0%, #C8C8C8 100%);
+  box-shadow: 4px 4px 12px rgba(0,0,0,0.1), -4px -4px 12px rgba(255,255,255,0.3);
+}
+
+/* ------------------ Responsive Styles ------------------ */
+@media (max-width: 1024px) {
+  .hero, .content {
+    padding: 0 5%;
   }
-  to {
-    transform: rotate(360deg);
+}
+
+@media (max-width: 768px) {
+  .search-bar {
+    font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+    padding: 12px 18px;
+  }
+
+  .stock-header {
+    font-size: 1rem;
+    padding: 10px 15px;
+  }
+
+  .content {
+    padding: 30px 5%;
+  }
+
+  .faqs {
+    padding: 20px;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
+@media (max-width: 480px) {
+  .search-bar {
+    font-size: clamp(0.9rem, 4vw, 1.1rem);
+    padding: 10px 15px;
   }
-}
 
-.card {
-  padding: 2em;
-}
+  .stock-header {
+    font-size: 0.9rem;
+    padding: 8px 12px;
+  }
 
-.read-the-docs {
-  color: #888;
+  .content {
+    padding: 20px 5%;
+  }
+
+  .faqs {
+    padding: 15px;
+  }
+
+  .scroll-down {
+    font-size: 1.5rem;
+  }
 }
