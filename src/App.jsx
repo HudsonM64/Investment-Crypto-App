@@ -1,31 +1,33 @@
-import { useState } from 'react';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import Xlist from "./components/Xlist";
 
 function App() {
-  const [search, setSearch] = useState('');
-
-  const scrollToContent = () => {
-    const content = document.querySelector('.content');
-    content.scrollIntoView({ behavior: 'smooth' });
-  };
+  const [search, setSearch] = useState("");
 
   return (
     <div className="app-container">
-      {/* Header for stock standings */}
+      {/* Header */}
       <header className="stock-header">
         <h2>Current Stocks</h2>
       </header>
 
-      {/* Hero section with centered search bar */}
+      {/* Hero section with centered search bar and widget */}
       <section className="hero">
-        <input
-          type="text"
-          placeholder="Type a stock or crypto symbol..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="search-bar"
-        />
+        <div className="hero-content">
+          <input
+            type="text"
+            placeholder="Type a stock or crypto symbol..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="search-bar"
+          />
+        </div>
       </section>
+
+      <div className="xlist-container">
+            <Xlist theme="light" listId="1977888287458045976" />
+          </div>
 
       {/* Scrollable content below */}
       <main className="content">
