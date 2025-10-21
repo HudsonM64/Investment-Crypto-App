@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+Lucid.json
+Nvidia.json
+SkyPoint_bad.json
+Uber.json
+.pytest_cache
+tempCodeRunnerFile.py
+__pycache__
