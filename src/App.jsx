@@ -18,11 +18,10 @@ function App() {
   const [search, setSearch] = useState("");
 
   const stocks = [
-    { symbol: "AAPL", price: 178.53 },
-    { symbol: "GOOGL", price: 137.42 },
-    { symbol: "TSLA", price: 250.18 },
-    { symbol: "MSFT", price: 324.61 },
-    { symbol: "AMZN", price: 125.77 },
+    { symbol: "ETR", name: "Entergy Corporation", price: 106.32 },
+    { symbol: "LAMR", name: "Lamar Advertising Company", price: 114.58 },
+    { symbol: "POOL", name: "Pool Corporation", price: 370.41 },
+    { symbol: "LUMN", name: "Lumen Technologies, Inc.", price: 1.46 },
   ];
 
   const scrollToContent = () => {
