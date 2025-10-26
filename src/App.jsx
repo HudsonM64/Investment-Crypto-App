@@ -13,9 +13,12 @@ import {
   Autocomplete,
 } from "@mui/material";
 import Xlist from "./components/Xlist";
+import QuotePanel from "./components/QuotePanel";
+import { useQuote } from "./hooks/useQuote";
 
 function App() {
-  const [search, setSearch] = useState("");
+  // Default to a Louisiana ticker so you see data immediately
+  const [search, setSearch] = useState("ETR");
 
   const stocks = [
     { symbol: "ETR", name: "Entergy Corporation", price: 106.32 },
@@ -24,14 +27,12 @@ function App() {
     { symbol: "LUMN", name: "Lumen Technologies, Inc.", price: 1.46 },
   ];
 
-  const scrollToContent = () => {
-    const content = document.querySelector(".content");
-    content.scrollIntoView({ behavior: "smooth" });
-  };
+  // Poll every 5s for the current symbol
+  const { data: quote, status } = useQuote(search?.toUpperCase() || "", 5000);
 
   return (
     <Box sx={{ bgcolor: "#585a5cff", minHeight: "100vh" }}>
-      {/* ✅ Header */}
+      {/* Header */}
       <AppBar position="static" color="primary" sx={{ mb: 2 }}>
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           <Typography variant="h6" sx={{ fontWeight: "bold" }}>
@@ -60,7 +61,7 @@ function App() {
         </Toolbar>
       </AppBar>
 
-      {/* ✅ Hero Section with Search */}
+      {/* Hero Section with Search */}
       <Box
         sx={{
           py: 6,
@@ -68,39 +69,48 @@ function App() {
           flexDirection: "column",
           alignItems: "center",
           textAlign: "center",
-          justifyContent:"center",
+          justifyContent: "center",
           bgcolor: "#8a8a8bff",
-          height: "80vh"
+          minHeight: "70vh",
         }}
       >
         <Typography variant="h4" gutterBottom>
-          Find Your Stock or Crypto
+          Find Your Stock
         </Typography>
 
         <Autocomplete
           freeSolo
           options={stocks.map((s) => s.symbol)}
           value={search}
-          onInputChange={(event, newValue) => setSearch(newValue)} // update search state
+          onInputChange={(_, newValue) => setSearch(newValue || "")}
           sx={{ width: "80%", maxWidth: 400, bgcolor: "white", borderRadius: 1 }}
           renderInput={(params) => (
             <TextField
               {...params}
               variant="outlined"
-              placeholder="Type a stock or crypto symbol..."
-              />
+              placeholder="Type a stock symbol (e.g., ETR, LAMR)…"
+            />
           )}
         />
+
+        {/* Live quote card */}
+        <Box sx={{ mt: 3 }}>
+          {status === "error" ? (
+            <Typography color="error">Failed to load quote.</Typography>
+          ) : (
+            <QuotePanel q={quote} />
+          )}
+        </Box>
       </Box>
 
-      {/* ✅ Widget (Xlist) */}
+      {/* X News List (static embed) */}
       <Container sx={{ my: 4 }}>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Xlist theme="light" listId="1977888287458045976" />
         </Paper>
       </Container>
 
-      {/* ✅ Info / FAQ Section */}
+      {/* Info / FAQs */}
       <Container className="content" sx={{ py: 6 }}>
         <Typography variant="h4" gutterBottom>
           Info / FAQs
@@ -132,8 +142,7 @@ function App() {
             <Typography variant="body1">
               It analyzes three factors: Market cap, Volatility, and Liquidity.
               The algorithm produces a "reliability score" and assigns a
-              two-part rating, such as "C6" or "B10", giving an accurate guide to
-              stock reliability.
+              two-part rating, such as "C6" or "B10".
             </Typography>
           </CardContent>
         </Card>
