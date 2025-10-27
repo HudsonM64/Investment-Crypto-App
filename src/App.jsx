@@ -1,71 +1,153 @@
 import { useState } from "react";
-import "./App.css";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  Container,
+  Box,
+  Grid,
+  TextField,
+  Paper,
+  Card,
+  CardContent,
+  Autocomplete,
+} from "@mui/material";
 import Xlist from "./components/Xlist";
+import QuotePanel from "./components/QuotePanel";
+import { useQuote } from "./hooks/useQuote";
 
 function App() {
-  const [search, setSearch] = useState('');
+  // Default to a Louisiana ticker so you see data immediately
+  const [search, setSearch] = useState("ETR");
 
   const stocks = [
-    { symbol: "AAPL", price: 178.53 },
-    { symbol: "GOOGL", price: 137.42 },
-    { symbol: "TSLA", price: 250.18 },
-    { symbol: "MSFT", price: 324.61 },
-    { symbol: "AMZN", price: 125.77 },
+    { symbol: "ETR", name: "Entergy Corporation", price: 106.32 },
+    { symbol: "LAMR", name: "Lamar Advertising Company", price: 114.58 },
+    { symbol: "POOL", name: "Pool Corporation", price: 370.41 },
+    { symbol: "LUMN", name: "Lumen Technologies, Inc.", price: 1.46 },
   ];
 
-  const scrollToContent = () => {
-    const content = document.querySelector('.content');
-    content.scrollIntoView({ behavior: 'smooth' });
-  };
+  // Poll every 5s for the current symbol
+  const { data: quote, status } = useQuote(search?.toUpperCase() || "", 5000);
 
   return (
-    <div className="app-container">
+    <Box sx={{ bgcolor: "#585a5cff", minHeight: "100vh" }}>
       {/* Header */}
-      <header className="stock-header">
-        <div className="stock-list">
-          {stocks.map((stock) => (
-            <div key={stock.symbol} className="stock-item">
-              <span className="stock-symbol">{stock.symbol}</span>
-              <span className="stock-price">${stock.price.toFixed(2)}</span>
-              </div>
-          ))}
-        </div>
-      </header>
+      <AppBar position="static" color="primary" sx={{ mb: 2 }}>
+        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+            Stock Tracker
+          </Typography>
+          <Grid container spacing={2} sx={{ width: "auto" }}>
+            {stocks.map((stock) => (
+              <Grid item key={stock.symbol}>
+                <Box
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    color: "white",
+                    px: 1,
+                  }}
+                >
+                  <Typography variant="subtitle2">{stock.symbol}</Typography>
+                  <Typography variant="body2">
+                    ${stock.price.toFixed(2)}
+                  </Typography>
+                </Box>
+              </Grid>
+            ))}
+          </Grid>
+        </Toolbar>
+      </AppBar>
 
-      {/* Hero section with centered search bar and widget */}
-      <section className="hero">
-        <div className="hero-content">
-          <input
-            type="text"
-            placeholder="Type a stock or crypto symbol..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="search-bar"
-          />
-        </div>
-      </section>
+      {/* Hero Section with Search */}
+      <Box
+        sx={{
+          py: 6,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          textAlign: "center",
+          justifyContent: "center",
+          bgcolor: "#8a8a8bff",
+          minHeight: "70vh",
+        }}
+      >
+        <Typography variant="h4" gutterBottom>
+          Find Your Stock
+        </Typography>
 
-      <div className="xlist-container">
-            <Xlist theme="light" listId="1977888287458045976" />
-          </div>
+        <Autocomplete
+          freeSolo
+          options={stocks.map((s) => s.symbol)}
+          value={search}
+          onInputChange={(_, newValue) => setSearch(newValue || "")}
+          sx={{ width: "80%", maxWidth: 400, bgcolor: "white", borderRadius: 1 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="outlined"
+              placeholder="Type a stock symbol (e.g., ETR, LAMR)…"
+            />
+          )}
+        />
 
-      {/* Scrollable content below */}
-      <main className="content">
-        <section className="faqs">
-          <h2>Info / FAQs</h2>
-          <h3>What to look for</h3>
-          <p>Look for the Market cap, Volatility, and Liquidity.</p>
-          <h3>The metric of the algorithm</h3>
-          <p>The algorithm collects and calculates these values and assigns the stock a "reliability score" that's calculated
-          using the stock's market cap and volatility to then assign a letter grade that can be either 'F', 'D', 'C', 'B', or 'A'.</p>
-          <h3>How the algorithm works</h3>
-          <p>It analyzes three factors to determine the letter grade: Market cap, Volatility, and Liquidity. 
-          The algorithm gives a "reliability score" that gives a letter grade. It then assigns a number from 1 - 10, giving it a form of 'C6' or 'B10' for example.
-          This two scale system gives the user an accurate guide to help gauge exactly how reliable a stock is.
-          </p>
-        </section>
-      </main>
-    </div>
+        {/* Live quote card */}
+        <Box sx={{ mt: 3 }}>
+          {status === "error" ? (
+            <Typography color="error">Failed to load quote.</Typography>
+          ) : (
+            <QuotePanel q={quote} />
+          )}
+        </Box>
+      </Box>
+
+      {/* X News List (static embed) */}
+      <Container sx={{ my: 4 }}>
+        <Paper elevation={3} sx={{ p: 2 }}>
+          <Xlist theme="light" listId="1977888287458045976" />
+        </Paper>
+      </Container>
+
+      {/* Info / FAQs */}
+      <Container className="content" sx={{ py: 6 }}>
+        <Typography variant="h4" gutterBottom>
+          Info / FAQs
+        </Typography>
+
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h6">What to look for</Typography>
+            <Typography variant="body1">
+              Look for the Market cap, Volatility, and Liquidity.
+            </Typography>
+          </CardContent>
+        </Card>
+
+        <Card sx={{ mb: 3 }}>
+          <CardContent>
+            <Typography variant="h6">The metric of the algorithm</Typography>
+            <Typography variant="body1">
+              The algorithm collects and calculates these values and assigns the
+              stock a "reliability score" that’s based on market cap and
+              volatility, resulting in a grade like 'F', 'D', 'C', 'B', or 'A'.
+            </Typography>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent>
+            <Typography variant="h6">How the algorithm works</Typography>
+            <Typography variant="body1">
+              It analyzes three factors: Market cap, Volatility, and Liquidity.
+              The algorithm produces a "reliability score" and assigns a
+              two-part rating, such as "C6" or "B10".
+            </Typography>
+          </CardContent>
+        </Card>
+      </Container>
+    </Box>
   );
 }
 
