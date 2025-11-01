@@ -31,4 +31,11 @@ SkyPoint_bad.json
 Uber.json
 .pytest_cache
 tempCodeRunnerFile.py
-__pycache__
+venv
+etfs
+hist
+stocks
+tempCodeRunnerFile
+nasdaqtraded.txt
+*.csv
+grade.cpython-312.pyc
