@@ -4,7 +4,7 @@ import math
 from ntpath import isfile
 import os
 import yfinance as yf
-from grade import Grade
+from grade_manual import Grade
 
 class BuildDataSet:
     def __init__(self):
@@ -72,8 +72,8 @@ class BuildDataSet:
         volatility = self.calculate_volatility(closes, volumes)
         market_cap = self.get_market_cap(ticker)
         liquidity = self.calculate_liquidity(avg_volume, market_cap)
-        grader = Grade(ticker, market_cap, liquidity, volatility)
-        grade = grader.grade()
+        grader = Grade(ticker, market_cap, avg_volume, None)
+        grade = grader.grade(market_cap, volatility, liquidity)
         
         return {
             "symbol": ticker,
@@ -85,7 +85,7 @@ class BuildDataSet:
         
     def main(self):
         folder_path = "./stocks"
-        output_file = 'graded_data_set.csv'
+        output_file = 'new_graded_data_set.csv'
         with open(output_file, 'w', encoding='utf-8') as f:
             
             writer = csv.DictWriter(f, fieldnames=["symbol", "market_cap", "volatility", "liquidity", "grade"])

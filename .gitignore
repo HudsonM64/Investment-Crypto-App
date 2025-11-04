@@ -39,3 +39,4 @@ tempCodeRunnerFile
 nasdaqtraded.txt
 *.csv
 grade.cpython-312.pyc
+*.pyc
