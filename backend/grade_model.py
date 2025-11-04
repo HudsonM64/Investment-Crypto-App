@@ -83,12 +83,37 @@ class Grade:
         liquidity_score = (self.avg_volume / self.market_cap) * 100
         return liquidity_score
     
+    def evaluate_market_cap(self, market_cap):
+        mc = market_cap
+        if mc > 100_000_000_000: return "Excellent"
+        elif mc > 10_000_000_000: return "Good"
+        elif mc > 1_000_000_000: return "Ok"
+        elif mc > 100_000_000: return "Bad"
+        else: return "Terrible"
+    
+    def evaluate_volatility(self, vol):
+        if vol < 0.02: return "Excellent"
+        elif vol < 0.04: return "Good"
+        elif vol < 0.08: return "Ok"
+        else: return "Bad"
+    
+    def evaluate_liquidity(self, liq):
+        if liq > 0.1: return "Excellent"
+        elif liq > 0.05: return "Good"
+        elif liq > 0.01: return "Ok"
+        else: return "Bad"
+    
     def grade(self):
         model = joblib.load('rf_model.pkl')
         
         volatility = self.compute_volatility()
         liquidity = self.compute_liquidity()
         market_cap = self.market_cap
+        
+        volatility_level = self.evaluate_volatility(volatility)
+        liquidity_level = self.evaluate_liquidity(liquidity)
+        market_cap_level = self.evaluate_market_cap(market_cap)
+        
         X = pd.DataFrame([{
         "market_cap": market_cap,
         "volatility": volatility,
@@ -99,8 +124,20 @@ class Grade:
         
         return {
             "symbol": self.symbol,
-            "market_cap": self.market_cap,
-            "volatility": round(volatility, 5),
-            "liquidity": round(liquidity, 5),
+            
+            "market_cap": {
+                "value": f'{self.market_cap}',
+                "condition": f'{market_cap_level}'
+            },
+            
+            "volatility": {
+                "value": f'{round(volatility, 5)}',
+                "condition": f'{volatility_level}'
+            },
+            "liquidity": {
+                "value": f'{round(liquidity, 5)}',
+                "condition": f'{liquidity_level}'
+            },
+            
             "grade": f"{predicted_grade}"
         }
