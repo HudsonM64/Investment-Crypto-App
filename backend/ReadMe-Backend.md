@@ -91,46 +91,33 @@ curl http://localhost:8000/health
 
 ### 2. Analyze Stock/Crypto
 
-**Endpoint:** `POST /analyze`
+**Endpoint:** `GET /analyze/{stock}`
 
-**Description:** Analyzes a stock or cryptocurrency symbol and returns a grade with market metrics.
+**Description:** Analyzes a stock or cryptocurrency symbol and returns a grade with market metrics. The ticker symbol is passed directly in the URL path.
 
 **Request:**
 
-**Headers:**
-
-```
-Content-Type: application/json
-```
-
-**Body:**
-
-```json
-{
-  "symbol": "AAPL"
-}
+```bash
+curl http://localhost:8000/analyze/AAPL
 ```
 
 **Example using JavaScript (fetch):**
 
 ```javascript
-const response = await fetch("http://localhost:8000/analyze", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json",
-  },
-  body: JSON.stringify({
-    symbol: "AAPL",
-  }),
-});
-
+const stock_ticker = "AAPL";
+const response = await fetch(`http://localhost:8000/analyze/${stock_ticker}`);
 const data = await response.json();
 console.log(data);
 ```
 
 **Parameters:**
 
-- `symbol` (string, required): The stock or cryptocurrency ticker symbol (e.g., "AAPL", "BTCUSD", "TSLA")
+- `{stock}` (path parameter, required): The stock or cryptocurrency ticker symbol in the URL path (e.g., "AAPL", "BTCUSD", "TSLA")
+
+**Example URLs:**
+
+- `http://localhost:8000/analyze/AAPL`
+- `http://localhost:8000/analyze/TSLA`
 
 **Response:**
 
@@ -197,13 +184,7 @@ function StockAnalyzer() {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:8000/analyze", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ symbol }),
-      });
+      const response = await fetch(`http://localhost:8000/analyze/${symbol}`);
 
       if (!response.ok) {
         throw new Error("Failed to analyze stock");
