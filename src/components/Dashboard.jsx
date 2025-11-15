@@ -12,7 +12,7 @@ import {
   Container,
 } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
-import Xlist from "./components/Xlist";
+import Xlist from "./Xlist";
 
 export default function Dashboard() {
   const { symbol } = useParams(); 

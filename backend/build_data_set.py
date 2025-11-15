@@ -13,6 +13,7 @@ class BuildDataSet:
     def get_market_cap(self, ticker):
         try:
             info = yf.Ticker(ticker).info
+            print(info)
             market_cap = info['marketCap']
             return market_cap
         except Exception as e:

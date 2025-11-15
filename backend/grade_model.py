@@ -12,6 +12,7 @@ class Grade:
         self.symbol = symbol
         self.market_cap = market_cap
         self.history = history
+        # self.stock_discripton = stock_discription
         
         
         self.compute_averages()
@@ -124,6 +125,7 @@ class Grade:
         
         return {
             "symbol": self.symbol,
+            # "description": self.stock_discripton,
             
             "market_cap": {
                 "value": f'{self.market_cap}',

@@ -17,7 +17,7 @@ import QuotePanel from "./components/QuotePanel";
 import { useQuote } from "./hooks/useQuote";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./LandingPage";
-import Dashboard from "./Dashboard";
+import Dashboard from "./components/Dashboard";
 
 export default function App() {
     return (

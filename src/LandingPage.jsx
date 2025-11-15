@@ -13,13 +13,15 @@ import {
   Autocomplete,
 } from "@mui/material";
 import Xlist from "./components/Xlist";
-import QuotePanel from "./components/QuotePanel";
 import { useQuote } from "./hooks/useQuote";
 import { useNavigate } from "react-router-dom";
+import SearchBar from "./components/SearchBar";
+import SearchDropdown from "./components/SearchDropdown";
+import './styles/LandingPage.css'
 
 export default function LandingPage() {
-  // Default to a Louisiana ticker so you see data immediately
-  const [search, setSearch] = useState("ETR");
+  const [search, setSearch] = useState("");
+  const [results, setResults] = useState([]);
   const navigate = useNavigate();
 
   const stocks = [
@@ -31,16 +33,7 @@ export default function LandingPage() {
 
   // Poll every 5s for the current symbol
   const { data: quote, status } = useQuote(search?.toUpperCase() || "", 5000);
-  
 
-  // Navigate to dashboard page for entered symbol
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (search.trim()) {
-      navigate(`/dashboard/${search.trim().toUpperCase()}`);
-    }
-  };
-  
   return (
     <Box sx={{ bgcolor: "#585a5cff", minHeight: "100vh" }}>
       {/* Header */}
@@ -73,50 +66,26 @@ export default function LandingPage() {
       </AppBar>
 
       {/* Hero Section with Search */}
-      <form onSubmit={handleSubmit}>
-          <Box
-            sx={{
-              py: 6,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              textAlign: "center",
-              justifyContent: "center",
-              bgcolor: "#8a8a8bff",
-              minHeight: "70vh",
-            }}
-      >
-            <Typography variant="h4" gutterBottom>
-              Find Your Stock
-            </Typography>
-
-            <Autocomplete
-              freeSolo
-              options={stocks.map((s) => s.symbol)}
-              value={search}
-              onInputChange={(_, newValue) => setSearch(newValue || "")}
-              sx={{ width: "80%", maxWidth: 400, bgcolor: "white", borderRadius: 1 }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  placeholder="Type a stock symbol (e.g., ETR, LAMR)…"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              )}
-            />
-
-            {/* Live quote card */}
-            <Box sx={{ mt: 3 }}>
-              {status === "error" ? (
-                <Typography color="error">Failed to load quote.</Typography>
-              ) : (
-                <QuotePanel q={quote} />
-              )}
-            </Box>
-          </Box>
-      </form>
+        <Box
+          sx={{
+            py: 6,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            textAlign: "center",
+            justifyContent: "center",
+            bgcolor: "#8a8a8bff",
+            minHeight: "70vh",
+          }}
+        >
+          <Typography variant="h4" gutterBottom>
+            Find Your Stock
+          </Typography>
+          <div className="search-wrapper">
+            <SearchBar setResults={setResults} />
+            {results.length > 0 && <SearchDropdown results={results} />}
+          </div>
+        </Box>
 
       {/* X News List (static embed) */}
       <Container sx={{ my: 4 }}>
