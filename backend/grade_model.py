@@ -8,10 +8,12 @@ import joblib
 
 class Grade:
     
-    def __init__(self, symbol: str, market_cap: float, history: List[dict]):
+    def __init__(self, symbol: str, market_cap: float, history: List[dict], stock_description: str, price_data):
         self.symbol = symbol
         self.market_cap = market_cap
         self.history = history
+        self.stock_description = stock_description
+        self.price_data = price_data
         
         
         self.compute_averages()
@@ -123,7 +125,9 @@ class Grade:
         predicted_grade = model.predict(X)[0]
         
         return {
+            "grade": f"{predicted_grade}",
             "symbol": self.symbol,
+            "description": self.stock_description,
             
             "market_cap": {
                 "value": f'{self.market_cap}',
@@ -139,5 +143,5 @@ class Grade:
                 "condition": f'{liquidity_level}'
             },
             
-            "grade": f"{predicted_grade}"
+            "price_data": self.price_data
         }

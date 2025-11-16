@@ -17,14 +17,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-class StockInput(BaseModel):
-    symbol: str
     
-    
-@app.post("/analyze")
-async def predict_stock_grade(data: StockInput):
-    result = await analyze(data.symbol)
+@app.get("/analyze/{stock}")
+def predict_stock_grade(stock: str):
+    result = analyze(stock)
     return result
 
 @app.get("/health")
