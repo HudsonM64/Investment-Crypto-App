@@ -4,7 +4,7 @@ import math
 from ntpath import isfile
 import os
 import yfinance as yf
-from grade_manual import Grade
+from grade_manual import Grade_Manual
 
 class BuildDataSet:
     def __init__(self):
@@ -13,7 +13,6 @@ class BuildDataSet:
     def get_market_cap(self, ticker):
         try:
             info = yf.Ticker(ticker).info
-            print(info)
             market_cap = info['marketCap']
             return market_cap
         except Exception as e:
@@ -73,7 +72,7 @@ class BuildDataSet:
         volatility = self.calculate_volatility(closes, volumes)
         market_cap = self.get_market_cap(ticker)
         liquidity = self.calculate_liquidity(avg_volume, market_cap)
-        grader = Grade(ticker, market_cap, avg_volume, None)
+        grader = Grade_Manual(ticker, market_cap, avg_volume, None)
         grade = grader.grade(market_cap, volatility, liquidity)
         
         return {

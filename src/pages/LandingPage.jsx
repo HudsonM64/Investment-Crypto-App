@@ -12,24 +12,18 @@ import {
   CardContent,
   Autocomplete,
 } from "@mui/material";
-import Xlist from "./components/Xlist";
-import { useQuote } from "./hooks/useQuote";
+import Xlist from "../components/Xlist";
+import { useQuote } from "../hooks/useQuote";
 import { useNavigate } from "react-router-dom";
-import SearchBar from "./components/SearchBar";
-import SearchDropdown from "./components/SearchDropdown";
-import './styles/LandingPage.css'
+import SearchBar from "../components/SearchBar";
+import SearchDropdown from "../components/SearchDropdown";
+import Header from "../components/Header";
+import '../styles/LandingPage.css'
 
 export default function LandingPage() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
-
-  const stocks = [
-    { symbol: "ETR", name: "Entergy Corporation", price: 106.32 },
-    { symbol: "LAMR", name: "Lamar Advertising Company", price: 114.58 },
-    { symbol: "POOL", name: "Pool Corporation", price: 370.41 },
-    { symbol: "LUMN", name: "Lumen Technologies, Inc.", price: 1.46 },
-  ];
 
   // Poll every 5s for the current symbol
   const { data: quote, status } = useQuote(search?.toUpperCase() || "", 5000);
@@ -37,33 +31,6 @@ export default function LandingPage() {
   return (
     <Box sx={{ bgcolor: "#585a5cff", minHeight: "100vh" }}>
       {/* Header */}
-      <AppBar position="static" color="primary" sx={{ mb: 2 }}>
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
-          <Typography variant="h6" sx={{ fontWeight: "bold" }}>
-            Stock Tracker
-          </Typography>
-          <Grid container spacing={2} sx={{ width: "auto" }}>
-            {stocks.map((stock) => (
-              <Grid item key={stock.symbol}>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    color: "white",
-                    px: 1,
-                  }}
-                >
-                  <Typography variant="subtitle2">{stock.symbol}</Typography>
-                  <Typography variant="body2">
-                    ${stock.price.toFixed(2)}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-        </Toolbar>
-      </AppBar>
 
       {/* Hero Section with Search */}
         <Box
