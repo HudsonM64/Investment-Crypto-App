@@ -1,31 +1,35 @@
-import { useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Container,
-  Box,
-  Grid,
-  TextField,
-  Paper,
-  Card,
-  CardContent,
-  Autocomplete,
-} from "@mui/material";
-import Xlist from "./components/Xlist";
-import QuotePanel from "./components/QuotePanel";
-import { useQuote } from "./hooks/useQuote";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import LandingPage from "./LandingPage";
-import Dashboard from "./Dashboard";
+import { StrictMode, useState, useMemo } from "react";
+import { createRoot } from "react-dom/client";
+import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
+import App from "./App.jsx";
 
-export default function App() {
-    return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/dashboard/:symbol" element={<Dashboard />} />
-      </Routes>
-    </BrowserRouter>
+function Root() {
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
+  const theme = useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: darkMode ? "dark" : "light",
+          primary: { main: darkMode ? "#90caf9" : "#1976d2" },
+          secondary: { main: darkMode ? "#f48fb1" : "#d81b60" },
+        },
+      }),
+    [darkMode]
+  );
+
+  return (
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <App darkMode={darkMode} setDarkMode={setDarkMode} />
+    </ThemeProvider>
   );
 }
+
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <Root />
+  </StrictMode>
+);
