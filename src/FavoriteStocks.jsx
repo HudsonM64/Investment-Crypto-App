@@ -15,7 +15,7 @@ export default function FavoriteStocks() {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
-  // Fetch stock prices whenever favorites change
+ 
   useEffect(() => {
     if (favorites.length === 0) return;
     setLoading(true);
