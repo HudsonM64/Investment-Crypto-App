@@ -1,4 +1,4 @@
-import { useState } from "react";
+ import { useState, useEffect } from "react";
 import {
   AppBar,
   Toolbar,
@@ -28,6 +28,26 @@ function App({ darkMode, setDarkMode }) {
   ];
 
   const { data: quote, status } = useQuote(search?.toUpperCase() || "", 5000);
+
+  
+  const [favorites, setFavorites] = useState(() => {
+    const saved = localStorage.getItem("favorites");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("favorites", JSON.stringify(favorites));
+  }, [favorites]);
+
+  const addFavorite = (ticker) => {
+    if (!favorites.includes(ticker)) {
+      setFavorites([...favorites, ticker]);
+    }
+  };
+
+  const removeFavorite = (ticker) => {
+    setFavorites(favorites.filter((f) => f !== ticker));
+  };
 
   return (
     <Box sx={{ minHeight: "100vh" }}>
@@ -71,7 +91,7 @@ function App({ darkMode, setDarkMode }) {
         </Toolbar>
       </AppBar>
 
-      {/* Hero Section */}
+      {/* Hero Section / Search */}
       <Box
         sx={{
           py: 6,
@@ -86,25 +106,34 @@ function App({ darkMode, setDarkMode }) {
           Find Your Stock
         </Typography>
 
-        <Autocomplete
-          freeSolo
-          options={stocks.map((s) => s.symbol)}
-          value={search}
-          onInputChange={(_, newValue) => setSearch(newValue || "")}
-          sx={{
-            width: "80%",
-            maxWidth: 400,
-            bgcolor: "background.paper",
-            borderRadius: 1,
-          }}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              variant="outlined"
-              placeholder="Type a stock symbol..."
-            />
-          )}
-        />
+        <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+          <Autocomplete
+            freeSolo
+            options={stocks.map((s) => s.symbol)}
+            value={search}
+            onInputChange={(_, newValue) => setSearch(newValue || "")}
+            sx={{
+              width: "80%",
+              maxWidth: 400,
+              bgcolor: "background.paper",
+              borderRadius: 1,
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                placeholder="Type a stock symbol..."
+              />
+            )}
+          />
+          <Button
+            variant="contained"
+            color="success"
+            onClick={() => addFavorite(search.toUpperCase())}
+          >
+            Pin
+          </Button>
+        </Box>
 
         <Box sx={{ mt: 3 }}>
           {status === "error" ? (
@@ -114,6 +143,49 @@ function App({ darkMode, setDarkMode }) {
           )}
         </Box>
       </Box>
+
+      {/* Favorites Section */}
+      <Container sx={{ my: 4 }}>
+        <Typography variant="h5" gutterBottom>
+          Pinned Favorites
+        </Typography>
+
+        {favorites.length === 0 ? (
+          <Typography>No pinned stocks yet.</Typography>
+        ) : (
+          <Grid container spacing={2}>
+            {favorites.map((ticker) => {
+              const stock = stocks.find((s) => s.symbol === ticker);
+              return (
+                <Grid item key={ticker}>
+                  <Card>
+                    <CardContent
+                      sx={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Typography variant="subtitle1">{ticker}</Typography>
+                      <Typography variant="body2">
+                        ${stock?.price.toFixed(2) ?? "..."}
+                      </Typography>
+                      <Button
+                        size="small"
+                        color="secondary"
+                        sx={{ mt: 1 }}
+                        onClick={() => removeFavorite(ticker)}
+                      >
+                        Unpin
+                      </Button>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
+        )}
+      </Container>
 
       {/* X News List */}
       <Container sx={{ my: 4 }}>
@@ -161,3 +233,4 @@ function App({ darkMode, setDarkMode }) {
 }
 
 export default App;
+
