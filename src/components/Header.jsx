@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const StockTicker = ({ stock }) => {
   const isPositive = stock.change >= 0;
@@ -20,6 +20,7 @@ const StockApp = () => {
   const [error, setError] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const hasFetched = useRef(false);
 
   const API_KEY = import.meta.env.VITE_TWELVE_DATA_API_KEY;
   
@@ -98,6 +99,8 @@ const StockApp = () => {
   };
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
     fetchStocks();
     const interval = setInterval(fetchStocks, 600000);
     return () => clearInterval(interval);

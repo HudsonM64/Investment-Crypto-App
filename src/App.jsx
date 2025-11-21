@@ -21,8 +21,6 @@ import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
 import Header from "./components/Header";
 
-export default function App() {
-
 function App({ darkMode, setDarkMode }) {
   const [search, setSearch] = useState("ETR");
 
@@ -44,7 +42,7 @@ function App({ darkMode, setDarkMode }) {
       </BrowserRouter>
     </>
   );
-}
+
 
   const { data: quote, status } = useQuote(search?.toUpperCase() || "", 5000);
 
