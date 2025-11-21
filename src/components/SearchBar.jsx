@@ -36,7 +36,7 @@ function SearchBar({setResults}) {
     <div className="search-bar-container">
       <FaSearch id="search-icon" />
       <input
-        placeholder="Type a stock or ticker symbol..."
+        placeholder="Type a stock or ticket symbol..."
         value={input}
         onChange={handleChange}
       />
