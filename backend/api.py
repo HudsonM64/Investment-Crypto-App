@@ -19,8 +19,8 @@ app.add_middleware(
 )
     
 @app.get("/analyze/{stock}")
-async def predict_stock_grade(stock: str):
-    result = await analyze(stock)
+def predict_stock_grade(stock: str):
+    result = analyze(stock)
     return result
 
 @app.get("/health")

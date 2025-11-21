@@ -4,7 +4,7 @@ from typing import List, final
 import math
 
 
-class Grade:
+class Grade_Manual:
     
     def __init__(self, symbol: str, market_cap: float, volume: float, history: List[dict]):
         self.symbol = symbol

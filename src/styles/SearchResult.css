@@ -1,0 +1,33 @@
+.search-result {
+    padding: 10px 16px;
+    cursor: pointer;
+  
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  
+    font-size: 0.95rem;
+    color: #1f2937; /* soft dark gray */
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  
+  /* Hover interaction */
+  .search-result:hover {
+    background: #f3f4f6; /* subtle light gray */
+  }
+  
+  /* Optional: active click effect */
+  .search-result:active {
+    background: #e5e7eb; /* slightly darker */
+  }
+  
+  /* Remove ugly text selection highlight */
+  .search-result::selection {
+    background: transparent;
+  }
+  
+  /* Add bottom border between items */
+  .search-result:not(:last-child) {
+    border-bottom: 1px solid #eeeeee;
+  }
+  
