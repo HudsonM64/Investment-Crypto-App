@@ -40,6 +40,7 @@ const Header = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [error, setError] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
+  const hasFetched = useRef(false);
 
   // Load pinned list on startup
   useEffect(() => {
@@ -70,6 +71,87 @@ const Header = () => {
     { symbol: "MTRN", name: "Materion Corporation" }
   ];
 
+  const setFallbackStocks = () => {
+    setStocks(
+      stocksData.map((info) => ({
+        symbol: info.symbol,
+        name: info.name,
+        price: 0,
+        change: 0,
+        changePercent: 0,
+        placeholder: true,
+      }))
+    );
+  };
+
+  const fetchStocks = async () => {
+    try {
+      setError(null);
+      if (stocks.length > 0) setIsRefreshing(true);
+
+      const symbols = stocksData.map((s) => s.symbol).join(",");
+      const url = `https://api.twelvedata.com/quote?symbol=${symbols}&apikey=${API_KEY}`;
+      const response = await fetch(url);
+
+      if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+      const data = await response.json();
+      let formatted = [];
+
+      if (Array.isArray(data)) {
+        formatted = data
+          .map((d) => {
+            if (!d?.close) return null;
+            const info = stocksData.find((s) => s.symbol === d.symbol);
+            return {
+              symbol: d.symbol,
+              name: info?.name || d.symbol,
+              price: parseFloat(d.close),
+              change: parseFloat(d.change || 0),
+              changePercent: parseFloat(d.percent_change || 0),
+            };
+          })
+          .filter(Boolean);
+      } else if (typeof data === "object") {
+        formatted = stocksData
+          .map((info) => {
+            const d = data[info.symbol];
+            if (!d?.close) return null;
+            return {
+              symbol: info.symbol,
+              name: info.name,
+              price: parseFloat(d.close),
+              change: parseFloat(d.change || 0),
+              changePercent: parseFloat(d.percent_change || 0),
+            };
+          })
+          .filter(Boolean);
+      }
+
+      if (formatted.length > 0) {
+        setStocks(formatted);
+        setLastUpdate(new Date().toLocaleTimeString());
+      } else {
+        setFallbackStocks();
+        setError("Live quotes unavailable; showing static list.");
+      }
+    } catch (err) {
+      console.error("Error fetching stocks:", err);
+      setError(err.message);
+      setFallbackStocks();
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
+    }
+  };
+
+  useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
+    fetchStocks();
+    const interval = setInterval(fetchStocks, 600000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div style={{ width: "100%" }}>
@@ -94,6 +176,7 @@ const Header = () => {
         </div>
 
         <button
+          onClick={fetchStocks}
           disabled={isRefreshing}
           style={{
             padding: "4px 12px",
