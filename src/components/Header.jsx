@@ -41,6 +41,7 @@ const StockApp = () => {
       
       const symbols = stocksData.map(s => s.symbol).join(",");
       const url = `https://api.twelvedata.com/quote?symbol=${symbols}&apikey=${API_KEY}`;
+      console.log("[twelvedata][quote] firing request", { source: "Header", symbols });
       const response = await fetch(url);
       
       if (!response.ok) throw new Error(`API Error: ${response.status}`);
@@ -89,6 +90,7 @@ const StockApp = () => {
 
       setStocks(formattedStocks);
       setLastUpdate(new Date().toLocaleTimeString());
+      console.log("[twelvedata][quote] success", { source: "Header", symbols, count: formattedStocks.length });
     } catch (err) {
       console.error("Error fetching stocks:", err);
       setError(err.message);

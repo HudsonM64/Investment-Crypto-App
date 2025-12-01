@@ -15,7 +15,6 @@ import {
 } from "@mui/material";
 import Xlist from "./components/Xlist";
 import QuotePanel from "./components/QuotePanel";
-import { useQuote } from "./hooks/useQuote";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
 import Dashboard from "./pages/Dashboard";
@@ -42,9 +41,6 @@ function App({ darkMode, setDarkMode }) {
       </BrowserRouter>
     </>
   );
-
-
-  const { data: quote, status } = useQuote(search?.toUpperCase() || "", 5000);
 
   
   const [favorites, setFavorites] = useState(() => {

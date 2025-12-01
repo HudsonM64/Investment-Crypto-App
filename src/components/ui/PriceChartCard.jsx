@@ -34,7 +34,7 @@ export default function PriceChartCard({ price_data }) {
         color: "white",
         boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
         height: 600,
-        width: "97%",
+        width: "1000px",
       }}
     >
       <CardContent>
