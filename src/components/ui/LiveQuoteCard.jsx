@@ -13,16 +13,17 @@ export default function LiveQuoteCard({ price_data }) {
   return (
     <Card
       sx={{
-        background: "#fff",
         borderRadius: 3,
-        p: 2,
-        boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
-        minHeight: 150,
-        maxWidth: 450
+        p: 3,
+        boxShadow: "0 16px 36px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
+        minHeight: 180,
+        backgroundColor: "rgba(20,24,27,0.55)",
+        border: "1px solid rgba(255,255,255,0.05)",
+        maxWidth: 350
       }}
     >
       <CardContent>
-        <Typography variant="h6" sx={{ fontWeight: "600", color: "#1E3A8A" }}>
+        <Typography variant="h6" sx={{ fontWeight: 700 }}>
           Current Price
         </Typography>
         <Stack display="flex" flexDirection="row" alignItems="center" gap={3}>

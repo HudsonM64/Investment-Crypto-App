@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { FaSearch } from "react-icons/fa";
-import "../styles/SearchBar.css";
+import { TextField, InputAdornment } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 function SearchBar({setResults}) {
   const [input, setInput] = useState("");
@@ -65,14 +65,44 @@ function SearchBar({setResults}) {
   }, []);
 
   return (
-    <div className="search-bar-container">
-      <FaSearch id="search-icon" />
-      <input
-        placeholder="Type a stock or ticket symbol..."
-        value={input}
-        onChange={handleChange}
-      />
-    </div>
+    <TextField
+      fullWidth
+      value={input}
+      onChange={handleChange}
+      placeholder="Type a stock or ticker symbol..."
+      variant="outlined"
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <SearchIcon sx={{ color: "primary.main" }} />
+          </InputAdornment>
+        ),
+      }}
+      sx={{
+        "& .MuiOutlinedInput-root": {
+          borderRadius: 3,
+          bgcolor: "rgba(255,255,255,0.03)",
+          backdropFilter: "blur(14px)",
+          border: "1px solid rgba(41, 242, 200, 0.28)",
+          boxShadow: "0 12px 40px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06)",
+          color: "text.primary",
+          transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(41, 242, 200, 0.5)",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderColor: "rgba(41, 242, 200, 0.7)",
+          },
+        },
+        "& .MuiOutlinedInput-notchedOutline": {
+          borderColor: "rgba(41, 242, 200, 0.28)",
+        },
+        "& .MuiInputBase-input": {
+          color: "text.primary",
+          "::placeholder": { color: "#6c7a7a", opacity: 1 },
+        },
+      }}
+    />
   );
 }
 
