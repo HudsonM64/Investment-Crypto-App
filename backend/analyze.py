@@ -70,10 +70,11 @@ def connect_to_api(symbol: str):
             "format": "JSON"
         }
     try:
+        print(f"[twelvedata][time_series] firing request for {symbol} interval={interval} output_size={output_size}")
         response = requests.get(url, params=params)
         response.raise_for_status()
         data = response.json()
-        
+        print(f"[twelvedata][time_series] success for {symbol} values={len(data.get('values', [])) if isinstance(data, dict) else 'n/a'}")
         return data
     except Exception as e:
         print(f"Failed to connect to Twelve Data api: {e}")

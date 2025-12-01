@@ -13,7 +13,6 @@ import {
   Autocomplete,
 } from "@mui/material";
 import Xlist from "../components/Xlist";
-import { useQuote } from "../hooks/useQuote";
 import { useNavigate } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import SearchDropdown from "../components/SearchDropdown";
@@ -24,9 +23,6 @@ export default function LandingPage() {
   const [search, setSearch] = useState("");
   const [results, setResults] = useState([]);
   const navigate = useNavigate();
-
-  // Poll every 5s for the current symbol
-  const { data: quote, status } = useQuote(search?.toUpperCase() || "", 5000);
 
   return (
     <Box sx={{ bgcolor: "#585a5cff", minHeight: "100vh" }}>
