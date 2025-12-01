@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 const StockTicker = ({ stock }) => {
   const isPositive = stock.change >= 0;
@@ -20,6 +20,7 @@ const StockApp = () => {
   const [error, setError] = useState(null);
   const [lastUpdate, setLastUpdate] = useState(null);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const hasFetched = useRef(false);
 
   const API_KEY = import.meta.env.VITE_TWELVE_DATA_API_KEY;
   
@@ -40,6 +41,7 @@ const StockApp = () => {
       
       const symbols = stocksData.map(s => s.symbol).join(",");
       const url = `https://api.twelvedata.com/quote?symbol=${symbols}&apikey=${API_KEY}`;
+      console.log("[twelvedata][quote] firing request", { source: "Header", symbols });
       const response = await fetch(url);
       
       if (!response.ok) throw new Error(`API Error: ${response.status}`);
@@ -88,6 +90,7 @@ const StockApp = () => {
 
       setStocks(formattedStocks);
       setLastUpdate(new Date().toLocaleTimeString());
+      console.log("[twelvedata][quote] success", { source: "Header", symbols, count: formattedStocks.length });
     } catch (err) {
       console.error("Error fetching stocks:", err);
       setError(err.message);
@@ -98,6 +101,8 @@ const StockApp = () => {
   };
 
   useEffect(() => {
+    if (hasFetched.current) return;
+    hasFetched.current = true;
     fetchStocks();
     const interval = setInterval(fetchStocks, 600000);
     return () => clearInterval(interval);
