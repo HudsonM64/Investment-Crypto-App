@@ -1,30 +1,35 @@
 import joblib
-import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from dotenv import load_dotenv
-import os
 from analyze import analyze
+from v1_regression_model import ForecastResponse, forecast_stock
 
 app = FastAPI()
-model = joblib.load('rf_model.pkl')
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Change to hosted route later
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-    
+
 @app.get("/analyze/{stock}")
-def predict_stock_grade(stock: str):
+def analyze_stock(stock: str):
     result = analyze(stock)
     return result
 
+@app.get("/forecast/{symbol}")
+def get_forecast(symbol: str):
+    past_data = analyze(symbol)
+
+    prices = [float(p["close"]) for p in past_data["price_data"]]
+    prices = prices[::-1]
+
+    result = forecast_stock(prices)
+    return result
+
+
 @app.get("/health")
 def health():
-    return {
-        "status": "online"
-    }
+    return { "status": "online" }

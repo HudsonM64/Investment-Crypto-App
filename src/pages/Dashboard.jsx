@@ -17,7 +17,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     // If we already have state for the same symbol, skip fetch
-    if (location.state && location.state.symbol?.toUpperCase() === symbol?.toUpperCase()) {
+    if (
+      location.state &&
+      location.state.symbol?.toUpperCase() === symbol?.toUpperCase()
+    ) {
       setData(location.state);
       setLoading(false);
       setError("");
@@ -75,51 +78,61 @@ export default function Dashboard() {
         )}
 
         {!loading && !error && data && (
-        <Grid container spacing={3} alignItems="stretch">
-          {/* TOP ROW */}
-          <Grid item xs={12} md={3}>
-            <GradeCard grade={data.grade} />
-          </Grid>
+          <Grid container spacing={3} alignItems="stretch">
+            {/* TOP ROW */}
+            <Grid item xs={12} md={3}>
+              <GradeCard grade={data.grade} />
+            </Grid>
 
-          <Grid item xs={12} md={3}>
-            <MetricCard
-              title="Market Cap"
-              value={data.market_cap?.value}
-              condition={data.market_cap?.condition}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <MetricCard
-              title="Liquidity"
-              value={data.liquidity?.value}
-              condition={data.liquidity?.condition}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={3}>
-            <MetricCard
-              title="Volatility"
-              value={data.volatility?.value}
-              condition={data.volatility?.condition}
-            />
-          </Grid>
-
-          {/* LEFT COLUMN (Description + LiveQuote stacked) */}
-          <Grid item xs={12} md={4}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <DescriptionCard
-                name={data.symbol || symbol}
-                description={data.description}
+            <Grid item xs={12} md={3}>
+              <MetricCard
+                title="Market Cap"
+                value={data.market_cap?.value}
+                condition={data.market_cap?.condition}
               />
-              <LiveQuoteCard price_data={data.price_data} />
-            </Box>
-          </Grid>
+            </Grid>
 
-          <Grid item xs={12} md={8} sx={{ display: "flex", flexDirection: "column" }}>
-            <PriceChartCard price_data={data.price_data} />
+            <Grid item xs={12} md={3}>
+              <MetricCard
+                title="Liquidity"
+                value={data.liquidity?.value}
+                condition={data.liquidity?.condition}
+              />
+            </Grid>
+
+            <Grid item xs={12} md={3}>
+              <MetricCard
+                title="Volatility"
+                value={data.volatility?.value}
+                condition={data.volatility?.condition}
+              />
+            </Grid>
+
+            {/* LEFT COLUMN (Description + LiveQuote stacked) */}
+            <Grid item xs={12} md={4}>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                <DescriptionCard
+                  name={data.symbol || symbol}
+                  symbol={data.symbol || symbol}
+                  description={data.description}
+                  price={Number(data.price_data?.[0]?.close)}
+                />
+                <LiveQuoteCard price_data={data.price_data} />
+              </Box>
+            </Grid>
+
+            <Grid
+              item
+              xs={12}
+              md={8}
+              sx={{ display: "flex", flexDirection: "column" }}
+            >
+              <PriceChartCard
+                price_data={data.price_data}
+                symbol={data.symbol || symbol}
+              />
+            </Grid>
           </Grid>
-        </Grid>
         )}
       </Box>
     </Box>
