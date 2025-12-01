@@ -5,27 +5,28 @@ export default function MetricCard({ title, value, condition, color }) {
   return (
     <Card
       sx={{
-        background: '#fff',
         borderRadius: 3,
-        boxShadow: "0px 4px 12px rgba(0,0,0,0.08)",
-        p: 4,
-        minHeight: 120,
-        minWidth: 325,
+        boxShadow: "0 16px 36px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.05)",
+        p: 3,
+        minHeight: 180,
         textAlign: "center",
+        backgroundColor: "rgba(20,24,27,0.55)",
+        border: "1px solid rgba(255,255,255,0.05)",
+        minWidth: 350
       }}
     >
       <CardContent>
-        <Typography variant="h4" sx={{ fontWeight: "600", color: "#1E3A8A" }}>
+        <Typography variant="h6" sx={{ fontWeight: 700 }}>
           {title}
         </Typography>
 
-        <Typography variant="h5" sx={{ mt: 1, fontWeight: "bold" }}>
+        <Typography variant="h4" sx={{ mt: 1, fontWeight: 800 }}>
           {value || "--"}
         </Typography>
 
         <Typography
-          variant="h5"
-          sx={{ mt: 1, color: "#3B82F6", fontWeight: 500 }}
+          variant="body1"
+          sx={{ mt: 1, color: color || "primary.main", fontWeight: 600 }}
         >
           {condition || ""}
         </Typography>

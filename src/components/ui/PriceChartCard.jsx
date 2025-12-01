@@ -1,87 +1,94 @@
-import React from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Card, CardContent, Typography, Box } from "@mui/material";
 import { LineChart } from "@mui/x-charts/LineChart";
 
 export default function PriceChartCard({ price_data }) {
-  const last30 = price_data.slice(0, 31)
+  const [chartWidth, setChartWidth] = useState(0);
+  const containerRef = useRef(null);
 
-  const get_y_values = () => {
-    let y_values = [];
-    last30.forEach((day) => {
-      y_values.push(Number(day.close));
+  useLayoutEffect(() => {
+    if (containerRef.current) {
+      setChartWidth(containerRef.current.getBoundingClientRect().width);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new ResizeObserver((entries) => {
+      if (!entries[0]) return;
+      setChartWidth(entries[0].contentRect.width);
     });
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
-    return y_values.reverse();
-  };
+  const last30 = price_data.slice(0, 31);
 
-  const dates = last30.map(day => {
-    const d = new Date(day.datetime);
-    return d.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
-  });
+  const yValues = last30.map(d => Number(d.close)).reverse();
+  const dates = last30
+    .map(d =>
+      new Date(d.datetime).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      })
+    )
+    .reverse();
 
-  dates.reverse()
-  const x_values = Array.from({length: 31}, (_, i) => i); // Array of length 30
+  const xValues = Array.from({ length: yValues.length }, (_, i) => i);
 
   return (
     <Card
       sx={{
-        background: "linear-gradient(135deg, #1E3A8A, #3B82F6)",
         borderRadius: 3,
-        p: 2,
-        color: "white",
-        boxShadow: "0px 4px 12px rgba(0,0,0,0.15)",
-        height: 600,
-        width: "1000px",
+        p: 3,
+        color: "text.primary",
+        boxShadow:
+          "0 18px 44px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+        backgroundColor: "rgba(20,24,27,0.55)",
+        border: "1px solid rgba(255,255,255,0.05)",
+        width: "900px",
       }}
     >
-      <CardContent>
-        <Typography variant="h6" sx={{ fontWeight: "bold", mb: 2 }}>
+      <CardContent sx={{ height: "100%" }}>
+        <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
           30-Day Price History
         </Typography>
 
-        <Box sx={{ height: 350 }}>
+        <Box ref={containerRef} sx={{ height: 500, width: "100%" }}>
           <LineChart
+            width={Math.max(chartWidth || 0, 360)}
             xAxis={[
               {
-                data: x_values,
-                tickLabelStyle: { fill: "rgba(255,255,255,0.7)" },
-                axisLineStyle: { stroke: "rgba(255,255,255,0.3)" },
-                valueFormatter: (value) => dates[value],
+                data: xValues,
+                tickLabelStyle: { fill: "rgba(232,241,241,0.7)" },
+                axisLineStyle: { stroke: "rgba(232,241,241,0.25)" },
+                valueFormatter: v => dates[v],
               },
             ]}
             yAxis={[
               {
-                tickLabelStyle: { fill: "rgba(255,255,255,0.7)" },
-                axisLineStyle: { stroke: "rgba(255,255,255,0.3)" },
+                tickLabelStyle: { fill: "rgba(232,241,241,0.7)" },
+                axisLineStyle: { stroke: "rgba(232,241,241,0.25)" },
               },
             ]}
             grid={{
               horizontal: true,
               vertical: false,
               strokeDasharray: "4 4",
-              stroke: "rgba(255,255,255,0.2)",
+              stroke: "rgba(232,241,241,0.15)",
             }}
             series={[
               {
-                data: get_y_values(),
+                data: yValues,
                 curve: "catmullRom",
-                color: "#A5B4FC",
-                showMark: true,
-                markStyle: {
-                  fill: "#FFFFFF",
-                  stroke: "#FFFFFF",
-                  r: 4,
-                },
-                valueFormatter: (value) => `$${value.toFixed(2)}`,
+                color: "#29F2C8",
+                showMark: false,
               },
             ]}
+            height={500}
             slotProps={{
               legend: { hidden: true },
             }}
-            height={500}
           />
         </Box>
       </CardContent>
