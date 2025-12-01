@@ -23,7 +23,7 @@ def analyze(symbol:str):
         history = []
     market_cap, description = get_market_cap(symbol)
     
-    volume, price_data = get_avg_volume(data)
+    volume, price_data = get_avg_volume(history)
     if market_cap == 0:
         return {"error": "Stock not available, could not retrieve market cap"}
     
@@ -81,13 +81,10 @@ def connect_to_api(symbol: str):
         return None
     
     
-def get_avg_volume(data):
-    values = data.get('values', [])
-
+def get_avg_volume(values):
     if not values:
-        return 0
-
-    total_volume = sum(int(day['volume']) for day in values)
+        return 0, []
+    
+    total_volume = sum(int(day['volume']) for day in values if 'volume' in day)
     avg_volume = total_volume / len(values)
-
     return avg_volume, values

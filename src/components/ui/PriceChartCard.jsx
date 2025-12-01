@@ -6,6 +6,31 @@ export default function PriceChartCard({ price_data }) {
   const [chartWidth, setChartWidth] = useState(0);
   const containerRef = useRef(null);
 
+  if (!price_data || price_data.length === 0) {
+    return (
+      <Card
+        sx={{
+          borderRadius: 3,
+          p: 3,
+          color: "text.primary",
+          boxShadow:
+            "0 18px 44px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+          backgroundColor: "rgba(20,24,27,0.55)",
+          border: "1px solid rgba(255,255,255,0.05)",
+          width: "100%",
+          height: "100%",
+        }}
+      >
+        <CardContent>
+          <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
+            30-Day Price History
+          </Typography>
+          <Typography color="text.secondary">No price data available.</Typography>
+        </CardContent>
+      </Card>
+    );
+  }
+
   useLayoutEffect(() => {
     if (containerRef.current) {
       setChartWidth(containerRef.current.getBoundingClientRect().width);
