@@ -31,7 +31,7 @@ export default function Dashboard() {
       try {
         setLoading(true);
         setError("");
-        const res = await fetch(`http://127.0.0.1:8000/analyze/${symbol}`);
+        const res = await fetch(`/api/analyze/${symbol}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
         if (json.error) throw new Error(json.error);

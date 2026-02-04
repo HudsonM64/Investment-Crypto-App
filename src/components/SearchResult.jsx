@@ -12,7 +12,7 @@ const SearchResult = ({ result }) => {
   const evaluateStock = async () => {
     try {
       const response = await fetch(
-        `http://127.0.0.1:8000/analyze/${result.symbol.toUpperCase()}`
+        `/api/analyze/${result.symbol.toUpperCase()}`
       );
       const data = await response.json();
       if (data.error) {

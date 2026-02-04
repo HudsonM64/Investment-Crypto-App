@@ -85,7 +85,7 @@ export default function PriceChartCard({ price_data, symbol }) {
       setLoadingForecast(true);
       setForecast(null);
 
-      const res = await fetch(`http://127.0.0.1:8000/forecast/${symbol}`);
+      const res = await fetch(`/api/forecast/${symbol}`);
       const json = await res.json();
       setForecast(json);
     } catch (err) {
